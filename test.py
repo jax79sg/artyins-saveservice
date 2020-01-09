@@ -3,6 +3,8 @@ import json
 class TestModels(unittest.TestCase):
 
     def test_sqlsavercreatereport(self):
+        from time import sleep
+        sleep(5)
         print("Running SQLSaver create report")
         from savers.sqlsaver import SQLSaver
         saver = SQLSaver()
