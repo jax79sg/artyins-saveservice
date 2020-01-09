@@ -13,9 +13,9 @@ branches:
 
 install:
   - pip install -r requirements.txt
+  - docker-compose up -d
+  - gunicorn --bind 0.0.0.0:9898 --workers 1 wsgi:app
 
 script:
-  - docker-compose up -d
-  - gunicorn --bind 0.0.0.0:9898 --daemon --workers 1 wsgi:app
   - python3 test.py
   - python3 testsendreq.py
