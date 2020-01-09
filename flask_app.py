@@ -16,6 +16,8 @@ from uuid import uuid4
 import requests
 from flask import Flask, jsonify, request
 
+from time import sleep
+sleep(15)
 # Root directory of the project
 ROOT_DIR = os.path.abspath("../")
 sys.path.append(ROOT_DIR)  # To find local version of the library
