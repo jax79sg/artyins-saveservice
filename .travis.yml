@@ -16,6 +16,6 @@ install:
 
 script:
   - docker-compose up -d
-  - gunicorn --bind 0.0.0.0:9898 --daemon --workers 10 wsgi:app
+  - gunicorn --bind 0.0.0.0:9898 --daemon --workers 1 wsgi:app
   - python3 test.py
   - python3 testsendreq.py
