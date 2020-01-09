@@ -1,0 +1,4 @@
+{"ingests":[
+{"text":"This is the weather for singapore","section":"observation","created_at":"20200108133333","ingest_id":2,"predicted_category":"DOCTRINE","annotated_category":"DOCTRINE"},
+{"text":"Mental stress along with physical pain...silence","section":"observation","created_at":"20200108122222","ingest_id":2,"predicted_category":"DOCTRINE","annotated_category":"DOCTRINE"}
+]}

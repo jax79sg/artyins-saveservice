@@ -1,0 +1,8 @@
+{"tablename":[
+{"row":
+{"data":{"columnname01":"01value","columnname02":"02value"},"condition":{"columnname03":"03value"}}},
+{"row":
+{"data":{"columnname04":"04value","columnname05":"05value"},"condition":{"columnname06":"06value"}}}
+
+
+]}

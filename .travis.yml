@@ -1,0 +1,21 @@
+language: python
+python:
+  - "3.6"
+cache: pip
+git:
+  depth: false
+
+# safelist
+branches:
+  only:
+  - master
+  - stable
+
+install:
+  - source setup_prerequisites.sh
+  - pip install -r requirements.txt
+
+script:
+  - gunicorn --bind 0.0.0.0:9898 --daemon --workers 10 wsgi:app
+  - python3 test.py
+  - python3 testsendreq.py

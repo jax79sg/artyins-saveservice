@@ -1,0 +1,9 @@
+{"ingests":[
+{"row":
+{"data":{"annotated_category":"PERSONNEL"},"condition":{"id":1}}},
+{"row":
+{"data":{"annotated_category":"PERSONNEL","predicted_category":"PERSONNEL"},"condition":{"id":"2"}}}
+
+
+]}
+
