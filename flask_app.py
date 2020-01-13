@@ -23,7 +23,10 @@ ROOT_DIR = os.path.abspath("../")
 sys.path.append(ROOT_DIR)  # To find local version of the library
 
 # Logging confg
-logging.basicConfig(level=logging.DEBUG, filename="log", filemode="a+",
+logging.basicConfig(level=logging.DEBUG,handlers=[
+                   logging.FileHandler("{0}/{1}.log".format(".", "log")),
+                   logging.StreamHandler()
+                ] ,
                 format="%(asctime)-15s %(levelname)-8s %(message)s")
 
 ############################################################
@@ -85,6 +88,9 @@ def updateingests_get():
         response_msg = json.dumps(result)
         return jsonify(response_msg), 200
 
+@app.route('/test',methods=['GET'])
+def test_get():
+    return jsonify('ok'), 200
 
 if __name__ == '__main__':
 
