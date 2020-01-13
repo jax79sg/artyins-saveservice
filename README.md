@@ -4,6 +4,7 @@
 This is a submodule for the artyins deployment architecture. Please refer to [main module](https://github.com/jax79sg/artyins) for full build details.
 
 [![Build Status](https://travis-ci.com/jax79sg/artyins-saveservice.svg?branch=master)](https://travis-ci.com/jax79sg/artyins-saveservice)
+[![Container Status](https://quay.io/repository/jax79sg/artyins-saveservice/status)](https://quay.io/repository/jax79sg/artyins-saveservice)
 
 Refer to [Trello Task list](https://trello.com/c/x7u3MPQX) for running tasks.
 
@@ -18,7 +19,7 @@ Refer to [Trello Task list](https://trello.com/c/x7u3MPQX) for running tasks.
 ---
 
 ## Usage
-The save service can be called by a HTTP POST call. Primarily on http://webserverip:port/save_reports, http://webserverip:port/save_ingests and http://webserverip:port/updateingests. It expects a json of the following formats.
+The save service can be called by a HTTP POST call. Primarily on http://saveservice:9891/save_reports, http://saveservice:9891/save_ingests and http://saveservice:9891/updateingests. It expects a json of the following formats.
 
 ```python
 ```
@@ -64,7 +65,7 @@ This repository is linked to [Travis CI/CD](https://travis-ci.com/jax79sg/artyin
 ### Web Service Test
 ```
 #Start gunicorn wsgi server
-gunicorn --bind 0.0.0.0:9898 --daemon --workers 10 wsgi:app
+gunicorn --bind 0.0.0.0:9891 --daemon --workers 10 wsgi:app
 ```
 ### Send test POST request
 ```python
