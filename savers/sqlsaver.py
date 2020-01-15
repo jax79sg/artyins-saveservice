@@ -14,6 +14,7 @@ class SQLSaver(SaverInterface):
         self.logging.info("Log in is successful")
 
     def executesql(self, sqlstatement):
+        self.logging.debug("Executing %s", sqlstatement)
         cursor=self.db.cursor()
         cursor.execute(sqlstatement)
         self.db.commit()
@@ -45,11 +46,15 @@ class SQLSaver(SaverInterface):
         return records
 
     def create(self, jsonobject):
+        self.logging.info("Starting create operations")
+        if isinstance(jsonobject, str):
+           self.logging.debug("data obj received is not json, manually converting")
+           jsonobject = json.loads(jsonobject)
         dictkeys= jsonobject.keys() 
         totalrowcount=0       
         for tablename in dictkeys:
            rowstoadd=jsonobject[tablename]
-           print("Table: {}\nRows:{}".format(tablename, rowstoadd))
+           self.logging.debug("Table: %s Rows: %s",tablename, rowstoadd)
            sqlstatementcolnames=""
            sqlstatementcolvalues=""
            for row in rowstoadd:
@@ -58,7 +63,7 @@ class SQLSaver(SaverInterface):
                print("ColumnNames: {}".format(dictcolsinrow))
                colCount=0
                for col in dictcolsinrow:
-                   print("Col:{},Val:{}".format(col,row[col]))
+                   self.logging.debug("Col:%s,Val:%s",col,row[col])
                    if colCount==0:
                        sqlstatementcolnames=col
                        sqlstatementcolvalues="\'"+str(row[col])+"\'"
