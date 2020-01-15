@@ -90,7 +90,7 @@ def run_savereportsingests(data):
     now = datetime.now().strftime("%Y%m%d%H%M%S")
     filedict=defaultdict(str)
     for datarow in data:
-        filedict[datarow["filename"]=0
+        filedict[datarow["filename"]]=0
     uniquefilenamelist=filedict.keys()
     
     #filenamelist= [data[x] for x in ['filename']]
