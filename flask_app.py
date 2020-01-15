@@ -102,7 +102,7 @@ def run_savereportsingests(data):
     filenameidpair={"fake":None}
     for filename in uniquefilenamelist:
         logging.debug("Processing %s", filename)
-        reportrecord={"reports":{"filename":filename,"created_at":now.strftime("%Y%m%d%H%M%S"),"ingested_at":now.strftime("%Y%m%d%H%M%S"),"currentloc":"PROCESSING"}}      
+        reportrecord={"reports":{"filename":filename,"created_at":now,"ingested_at":now,"currentloc":"PROCESSING"}}      
         totalcount=save.create(reportrecord)
         if totalcount==0:
             failed.append(filename)
