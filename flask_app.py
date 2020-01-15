@@ -83,6 +83,9 @@ def run_savereportsingests(data):
     
     '''
     logging.info("Startig saving operations")
+    logging.debug("DATA %s  TYPE %s", data, type(data))
+    if isinstance(data, str):
+        data = json.loads(data)
     from datetime import datetime
     now = datetime.now().strftime("%Y%m%d%H%M%S")
     filenamelist= [data[x] for x in ['filename']]
