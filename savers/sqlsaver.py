@@ -8,25 +8,36 @@ class SQLSaver(SaverInterface):
 # {'tablename':[{'columnname01':'somevalue','columnname02':'somevalue'},{'columnaname02':'somevalue'}]}    
     
     def connect(self):
-       self.db = mysql.connector.connect(host=self.config.SQL_HOST, user=self.config.SQL_USER, passwd=self.config.SQL_PASSWD, database=self.config.SQL_DATABASE, auth_plugin='mysql_native_password') 
+        self.db = mysql.connector.connect(host=self.config.SQL_HOST, user=self.config.SQL_USER, passwd=self.config.SQL_PASSWD, database=self.config.SQL_DATABASE, auth_plugin='mysql_native_password') 
 
-    def executesql(self, sqlstatements):
-       print("Statements to execute\n",sqlstatements)
-       cursor=self.db.cursor()
-       for sqlstatement in sqlstatements:
-           cursor.execute(sqlstatement)
-       self.db.commit()
-       cursor.close()
-
+    def executesql(self, sqlstatement):
+        cursor=self.db.cursor()
+        cursor.execute(sqlstatement)
+        self.db.commit()
+        rowcount=cursor.rowcount
+        cursor.close()
+        return rowcount
+    
+    def querysql(self,sqlstatement):
+        print("Statements to execute\n",sqlstatement)
+        cursor=self.db.cursor()
+        cursor.execute(sqlstatement)
+        records = cursor.fetchall()
+        cursor.close()
+        return records
 
     def __init__(self,config=None):
         if config == None:
            self.config = SaverConfig() 
         self.connect()
 
+    def freequery(self, sqlstring):
+        records=self.querysql(sqlstring)
+        return records
+
     def create(self, jsonobject):
-        dictkeys= jsonobject.keys()        
-        sqlstatements=[]
+        dictkeys= jsonobject.keys() 
+        totalrowcount=0       
         for tablename in dictkeys:
            rowstoadd=jsonobject[tablename]
            print("Table: {}\nRows:{}".format(tablename, rowstoadd))
@@ -47,8 +58,9 @@ class SQLSaver(SaverInterface):
                        sqlstatementcolvalues=sqlstatementcolvalues+','+"\'"+str(row[col])+"\'"
                    colCount=colCount+1
                sqlstatement="INSERT INTO " + tablename + "(" + sqlstatementcolnames + ") VALUES (" + sqlstatementcolvalues + ")"
-               sqlstatements.append(sqlstatement)
-           self.executesql(sqlstatements)
+               rowcount=self.executesql(sqlstatement)
+               totalrowcount=totalrowcount+rowcount
+        return totalrowcount
 
     def update(self,jsonobject):
          #Expects the following json
@@ -93,6 +105,7 @@ class SQLSaver(SaverInterface):
 
     def delete(self):
          super.delete()
+
       
 if __name__=="__main__":
      jsonobj = json.load(open("create_report.json","r"))

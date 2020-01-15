@@ -1,4 +1,4 @@
-# Import libraries
+# Import lmeibraries
 import os
 import sys
 import random
@@ -21,6 +21,7 @@ sleep(15)
 # Root directory of the project
 ROOT_DIR = os.path.abspath("../")
 sys.path.append(ROOT_DIR)  # To find local version of the library
+
 
 # Logging confg
 logging.basicConfig(level=logging.DEBUG,handlers=[
@@ -58,6 +59,68 @@ def run_updateingests(data):
     results = saver.update(data)
     return results
 
+
+def run_getreportid(filename):
+    logging.info('Loading data: %s', data)
+    results = save.getreportid(filename)
+    return results
+
+def run_savereportsingests(data):
+    '''
+    - General idea is save all the data into the database.
+   
+    REPORTS TABLE
+    - Get all unique report filenames from data
+       - for each filename, create an entry for each row in the reports table
+       - if creation fails, include error in this report filename with reason as report exists.
+       - Record the filename with error
+
+    INGESTS TABLE
+    - FOr each item in data (skip those with filename in error)
+          - Get the id for that item.
+          - create an entry for this item in the ingests table.
+          - If there's error, include error in report
+    
+    '''
+    from datetime import datetime
+    now = datetime.now().strftime("%Y%m%d%H%M%S")
+    filenamelist= [data[x] for x in ['filename']]
+    uniquefilenamelist = list(set(filenamelist))
+
+    #REPORTS TABLE
+    failed=[]
+    filenameidpair={"fake":None}
+    for filename in uniquefilenamelist:
+        reportrecord={"reports":{"filename":filename,"created_at":now.strftime("%Y%m%d%H%M%S"),"ingested_at":now.strftime("%Y%m%d%H%M%S"),"currentloc":"PROCESSING"}      
+        totalcount=save.create(reportrecord)
+        if totalcount==0:
+            failed.append(filename)
+    
+    #INGESTS TABLE
+    failedingest=[]
+    for datarow in data:
+        if datarow["filename"] in failed:
+            failjson.append({"filename":datarow["filename"], "id":datarow["id"], "error":"report already exists"})
+        else:
+            ingestrecord={"ingests":{"text":datarow["content"],"section":datarow["section"],"created_at":now,"ingested_id":datarow["filename"],"predicted_category":datarow["class"]}}
+            totalcount=save.create(ingestrecord)
+            if totalcount==0:
+               failedingest.append(datarow["id"])
+    
+    failedreportsjson=[]
+    failedingestsjson=[]
+    for failedreport in failed:
+        failedreportsjson.append({"filename":failedreport,"error":"Report already exists"})
+    for failedingest in failedingests:
+        failedingestsjson.append({"id":failedingest,"error":"Ingestion failed for some reason"})
+
+    return {"failreports":failedreportsjson.append,"failingests":failedingestsjson.append}
+    
+    
+    
+    
+        
+
 # Instantiate the Node
 app = Flask(__name__)
 
@@ -69,7 +132,10 @@ def savereports_get():
         result = run_savereports(request_json)
         
         response_msg = json.dumps(result)
-        return jsonify(response_msg), 200
+        response = {
+           'results': response_msg
+        }
+        return jsonify(response), 200
 
 @app.route('/saveingests',methods=['POST'])
 def saveingests_get():
@@ -77,7 +143,10 @@ def saveingests_get():
         request_json = request.get_json(force=True)
         result = run_saveingests(request_json)
         response_msg = json.dumps(result)
-        return jsonify(response_msg), 200
+        response = {
+           'results': response_msg
+        }
+        return jsonify(response), 200
 
 
 @app.route('/updateingests',methods=['POST'])
@@ -86,7 +155,32 @@ def updateingests_get():
         request_json = request.get_json(force=True)
         result = run_updateingests(request_json)
         response_msg = json.dumps(result)
-        return jsonify(response_msg), 200
+        response = {
+           'results': response_msg
+        }
+        return jsonify(response), 200
+
+@app.route('getreportid',methods=['POST'])
+def getreportid_get():
+    if request.method =='POST':
+        request_json = request.get_json(force=True)
+        result = run_getreportid(request_json)
+        response_msg = json.dumps(result)
+        response = {
+           'results': response_msg
+        }
+        return jsonify(response), 200       
+
+def savereportsingests():
+    if request.method =='POST':
+        request_json = request.get_json(force=True)
+        result = run_savereportsingests(requests_json)
+        response_msg = json.dumps(result)
+        response = {
+           'results': response_msg
+        }
+        return jsonify(response), 200
+
 
 @app.route('/test',methods=['GET'])
 def test_get():

@@ -22,3 +22,6 @@ class SaverInterface(ABC):
     def delete(self, json):
         raise NotImplementedError()
 
+    def freequery(self, string):
+        raise NotImplementedError()
+
