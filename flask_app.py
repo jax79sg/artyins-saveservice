@@ -160,7 +160,7 @@ def updateingests_get():
         }
         return jsonify(response), 200
 
-@app.route('getreportid',methods=['POST'])
+@app.route('/getreportid',methods=['POST'])
 def getreportid_get():
     if request.method =='POST':
         request_json = request.get_json(force=True)
