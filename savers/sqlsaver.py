@@ -11,6 +11,7 @@ class SQLSaver(SaverInterface):
     def connect(self):
         self.logging.info("Logging to %s@%s:%s -p %s", self.config.SQL_USER, self.config.SQL_HOST, self.config.SQL_DATABASE, self.config.SQL_PASSWD)
         self.db = mysql.connector.connect(host=self.config.SQL_HOST, user=self.config.SQL_USER, passwd=self.config.SQL_PASSWD, database=self.config.SQL_DATABASE, auth_plugin='mysql_native_password') 
+        self.logging.info("Log in is successful")
 
     def executesql(self, sqlstatement):
         cursor=self.db.cursor()
