@@ -91,7 +91,7 @@ def run_savereportsingests(data):
     failed=[]
     filenameidpair={"fake":None}
     for filename in uniquefilenamelist:
-        reportrecord={"reports":{"filename":filename,"created_at":now.strftime("%Y%m%d%H%M%S"),"ingested_at":now.strftime("%Y%m%d%H%M%S"),"currentloc":"PROCESSING"}      
+        reportrecord={"reports":{"filename":filename,"created_at":now.strftime("%Y%m%d%H%M%S"),"ingested_at":now.strftime("%Y%m%d%H%M%S"),"currentloc":"PROCESSING"}}      
         totalcount=save.create(reportrecord)
         if totalcount==0:
             failed.append(filename)
