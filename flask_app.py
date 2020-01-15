@@ -16,8 +16,6 @@ from uuid import uuid4
 import requests
 from flask import Flask, jsonify, request
 from collections import defaultdict
-from time import sleep
-sleep(15)
 # Root directory of the project
 ROOT_DIR = os.path.abspath("../")
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -102,7 +100,7 @@ def run_savereportsingests(data):
     filenameidpair={"fake":None}
     for filename in uniquefilenamelist:
         logging.debug("Processing %s", filename)
-        reportrecord={"reports":{"filename":filename,"created_at":now,"ingested_at":now,"currentloc":"PROCESSING"}}      
+        reportrecord={"reports":[{"filename":filename,"created_at":now,"ingested_at":now,"currentloc":"PROCESSING"}]}      
         totalcount=saver.create(reportrecord)
         if totalcount==0:
             failed.append(filename)
