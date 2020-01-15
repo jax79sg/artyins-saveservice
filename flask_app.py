@@ -103,7 +103,7 @@ def run_savereportsingests(data):
     for filename in uniquefilenamelist:
         logging.debug("Processing %s", filename)
         reportrecord={"reports":{"filename":filename,"created_at":now,"ingested_at":now,"currentloc":"PROCESSING"}}      
-        totalcount=save.create(reportrecord)
+        totalcount=saver.create(reportrecord)
         if totalcount==0:
             failed.append(filename)
     
@@ -115,7 +115,7 @@ def run_savereportsingests(data):
             failjson.append({"filename":datarow["filename"], "id":datarow["id"], "error":"report already exists"})
         else:
             ingestrecord={"ingests":{"text":datarow["content"],"section":datarow["section"],"created_at":now,"ingested_id":datarow["filename"],"predicted_category":datarow["class"]}}
-            totalcount=save.create(ingestrecord)
+            totalcount=saver.create(ingestrecord)
             if totalcount==0:
                failedingest.append(datarow["id"])
     
