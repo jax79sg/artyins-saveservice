@@ -82,12 +82,14 @@ def run_savereportsingests(data):
           - If there's error, include error in report
     
     '''
+    logging.info("Startig saving operations")
     from datetime import datetime
     now = datetime.now().strftime("%Y%m%d%H%M%S")
     filenamelist= [data[x] for x in ['filename']]
     uniquefilenamelist = list(set(filenamelist))
 
     #REPORTS TABLE
+    logging.debug("Saving reports")
     failed=[]
     filenameidpair={"fake":None}
     for filename in uniquefilenamelist:
@@ -96,6 +98,7 @@ def run_savereportsingests(data):
         if totalcount==0:
             failed.append(filename)
     
+    logging.debug("Saving ingests")
     #INGESTS TABLE
     failedingest=[]
     for datarow in data:
@@ -113,7 +116,7 @@ def run_savereportsingests(data):
         failedreportsjson.append({"filename":failedreport,"error":"Report already exists"})
     for failedingest in failedingests:
         failedingestsjson.append({"id":failedingest,"error":"Ingestion failed for some reason"})
-
+    logging.info("Saving opertations completed, retuning results")
     return {"failreports":failedreportsjson.append,"failingests":failedingestsjson.append}
     
     
@@ -171,10 +174,15 @@ def getreportid_get():
         }
         return jsonify(response), 200       
 
-def savereportsingests():
+@app.route('/savecontent',methods=['POST'])
+def savecontent_get():
+    logging.info("Received quest to save conetnt")
     if request.method =='POST':
+        logging.debug("Extracting JSON content")
         request_json = request.get_json(force=True)
+        logging.debug("Pass savnig operation to worker function")
         result = run_savereportsingests(requests_json)
+        logging.debug("Saving operation completes...dumping results")
         response_msg = json.dumps(result)
         response = {
            'results': response_msg
