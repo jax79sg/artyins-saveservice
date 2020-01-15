@@ -88,14 +88,20 @@ def run_savereportsingests(data):
         data = json.loads(data)
     from datetime import datetime
     now = datetime.now().strftime("%Y%m%d%H%M%S")
-    filenamelist= [data[x] for x in ['filename']]
-    uniquefilenamelist = list(set(filenamelist))
+    filedict=defaultdict(str)
+    for datarow in data:
+        filedict[datarow["filename"]=0
+    uniquefilenamelist=filedict.keys()
+    
+    #filenamelist= [data[x] for x in ['filename']]
+    #uniquefilenamelist = list(set(filenamelist))
 
     #REPORTS TABLE
     logging.debug("Saving reports")
     failed=[]
     filenameidpair={"fake":None}
     for filename in uniquefilenamelist:
+        logging.debug("Processing %s", filename)
         reportrecord={"reports":{"filename":filename,"created_at":now.strftime("%Y%m%d%H%M%S"),"ingested_at":now.strftime("%Y%m%d%H%M%S"),"currentloc":"PROCESSING"}}      
         totalcount=save.create(reportrecord)
         if totalcount==0:
