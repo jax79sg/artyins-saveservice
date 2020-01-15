@@ -3,11 +3,13 @@ import os
 from config import SaverConfig
 import mysql.connector
 import json
+import logging
 class SQLSaver(SaverInterface):
 # This class takes in json files and will interpret the jsons as follows.
 # {'tablename':[{'columnname01':'somevalue','columnname02':'somevalue'},{'columnaname02':'somevalue'}]}    
     
     def connect(self):
+        self.logging.info("Logging to %s@%s:%s -p %s", self.config.SQL_USER, self.config.SQL_HOST, self.config.SQL_DATABASE, self.config.SQL_PASSWD)
         self.db = mysql.connector.connect(host=self.config.SQL_HOST, user=self.config.SQL_USER, passwd=self.config.SQL_PASSWD, database=self.config.SQL_DATABASE, auth_plugin='mysql_native_password') 
 
     def executesql(self, sqlstatement):
@@ -29,6 +31,12 @@ class SQLSaver(SaverInterface):
     def __init__(self,config=None):
         if config == None:
            self.config = SaverConfig() 
+        logging.basicConfig(level=logging.DEBUG,handlers=[
+        logging.FileHandler("{0}/{1}.log".format("/logs", "saverservice-sqlsaver")),
+        logging.StreamHandler()
+    ],
+                format="%(asctime)-15s %(levelname)-8s %(message)s")
+        self.logging=logging
         self.connect()
 
     def freequery(self, sqlstring):
