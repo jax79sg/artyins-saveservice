@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 from uuid import uuid4
 import requests
 from flask import Flask, jsonify, request
-
+from collections import defaultdict
 from time import sleep
 sleep(15)
 # Root directory of the project
