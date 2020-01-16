@@ -92,9 +92,9 @@ class SQLSaver(SaverInterface):
                   sqlstatement="INSERT INTO " + tablename + "(" + sqlstatementcolnames + ") VALUES (" + sqlstatementcolvalues + ")"
                   rowcount=self.executesql(sqlstatement, datalist)
                   totalrowcount=totalrowcount+rowcount
-           except Exception as e:
-              totalrowcount=0
-           return totalrowcount
+        except Exception as e:
+           totalrowcount=0
+        return totalrowcount
 
     def update(self,jsonobject):
          #Expects the following json
