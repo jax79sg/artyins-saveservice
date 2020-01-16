@@ -62,17 +62,22 @@ class SQLSaver(SaverInterface):
                dictcolsinrow=row.keys()
                print("ColumnNames: {}".format(dictcolsinrow))
                colCount=0
+               datalist=[]
                for col in dictcolsinrow:
                    self.logging.debug("Col:%s,Val:%s",col,row[col])
                    if colCount==0:
                        sqlstatementcolnames=col
-                       sqlstatementcolvalues="\'"+str(row[col])+"\'"
+                       #sqlstatementcolvalues="\'"+str(row[col])+"\'"
+                       sqlstatementcolvalues="\'%\'"
+                       datalist.append(str(row[col]))
                    else:
                        sqlstatementcolnames=sqlstatementcolnames+','+col
-                       sqlstatementcolvalues=sqlstatementcolvalues+','+"\'"+str(row[col])+"\'"
+                       #sqlstatementcolvalues=sqlstatementcolvalues+','+"\'"+str(row[col])+"\'"
+                       sqlstatementcolvalues=sqlstatementcolvalues+"\'%\'"
+                       datalist.append(str(row[col]))
                    colCount=colCount+1
                sqlstatement="INSERT INTO " + tablename + "(" + sqlstatementcolnames + ") VALUES (" + sqlstatementcolvalues + ")"
-               rowcount=self.executesql(sqlstatement)
+               rowcount=self.executesql(sqlstatement, datalist)
                totalrowcount=totalrowcount+rowcount
         return totalrowcount
 
