@@ -31,6 +31,7 @@ class SQLSaver(SaverInterface):
            rowcount=cursor.rowcount
            cursor.close()
         except Exception as e:
+           self.logging.debug("Problem executing SQL: %s", str(e))
            rowcount=0
         return rowcount
     
