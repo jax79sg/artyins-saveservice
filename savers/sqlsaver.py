@@ -21,6 +21,18 @@ class SQLSaver(SaverInterface):
         rowcount=cursor.rowcount
         cursor.close()
         return rowcount
+
+    def executesql(self, sqlstatement, data):
+        try:
+           self.logging.debug("Executing %s", sqlstatement)
+           cursor=self.db.cursor()
+           cursor.execute(sqlstatement, data)
+           self.db.commit()
+           rowcount=cursor.rowcount
+           cursor.close()
+        except Exception as e:
+           rowcount=0
+        return rowcount
     
     def querysql(self,sqlstatement):
         print("Statements to execute\n",sqlstatement)
@@ -46,40 +58,43 @@ class SQLSaver(SaverInterface):
         return records
 
     def create(self, jsonobject):
-        self.logging.info("Starting create operations")
-        if isinstance(jsonobject, str):
-           self.logging.debug("data obj received is not json, manually converting")
-           jsonobject = json.loads(jsonobject)
-        dictkeys= jsonobject.keys() 
-        totalrowcount=0       
-        for tablename in dictkeys:
-           rowstoadd=jsonobject[tablename]
-           self.logging.debug("Table: %s Rows: %s",tablename, rowstoadd)
-           sqlstatementcolnames=""
-           sqlstatementcolvalues=""
-           for row in rowstoadd:
-               print("Row:{}".format(row))
-               dictcolsinrow=row.keys()
-               print("ColumnNames: {}".format(dictcolsinrow))
-               colCount=0
-               datalist=[]
-               for col in dictcolsinrow:
-                   self.logging.debug("Col:%s,Val:%s",col,row[col])
-                   if colCount==0:
-                       sqlstatementcolnames=col
-                       #sqlstatementcolvalues="\'"+str(row[col])+"\'"
-                       sqlstatementcolvalues="\'%\'"
-                       datalist.append(str(row[col]))
-                   else:
-                       sqlstatementcolnames=sqlstatementcolnames+','+col
-                       #sqlstatementcolvalues=sqlstatementcolvalues+','+"\'"+str(row[col])+"\'"
-                       sqlstatementcolvalues=sqlstatementcolvalues+"\'%\'"
-                       datalist.append(str(row[col]))
-                   colCount=colCount+1
-               sqlstatement="INSERT INTO " + tablename + "(" + sqlstatementcolnames + ") VALUES (" + sqlstatementcolvalues + ")"
-               rowcount=self.executesql(sqlstatement, datalist)
-               totalrowcount=totalrowcount+rowcount
-        return totalrowcount
+        try:
+           self.logging.info("Starting create operations")
+           if isinstance(jsonobject, str):
+              self.logging.debug("data obj received is not json, manually converting")
+              jsonobject = json.loads(jsonobject)
+           dictkeys= jsonobject.keys() 
+           totalrowcount=0       
+           for tablename in dictkeys:
+              rowstoadd=jsonobject[tablename]
+              self.logging.debug("Table: %s Rows: %s",tablename, rowstoadd)
+              sqlstatementcolnames=""
+              sqlstatementcolvalues=""
+              for row in rowstoadd:
+                  print("Row:{}".format(row))
+                  dictcolsinrow=row.keys()
+                  print("ColumnNames: {}".format(dictcolsinrow))
+                  colCount=0
+                  datalist=[]
+                  for col in dictcolsinrow:
+                      self.logging.debug("Col:%s,Val:%s",col,row[col])
+                      if colCount==0:
+                          sqlstatementcolnames=col
+                          #sqlstatementcolvalues="\'"+str(row[col])+"\'"
+                          sqlstatementcolvalues="\'%\'"
+                          datalist.append(str(row[col]))
+                      else:
+                          sqlstatementcolnames=sqlstatementcolnames+','+col
+                          #sqlstatementcolvalues=sqlstatementcolvalues+','+"\'"+str(row[col])+"\'"
+                          sqlstatementcolvalues=sqlstatementcolvalues+"\'%\'"
+                          datalist.append(str(row[col]))
+                      colCount=colCount+1
+                  sqlstatement="INSERT INTO " + tablename + "(" + sqlstatementcolnames + ") VALUES (" + sqlstatementcolvalues + ")"
+                  rowcount=self.executesql(sqlstatement, datalist)
+                  totalrowcount=totalrowcount+rowcount
+           except Exception as e:
+              totalrowcount=0
+           return totalrowcount
 
     def update(self,jsonobject):
          #Expects the following json
