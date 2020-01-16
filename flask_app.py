@@ -124,7 +124,7 @@ def run_savereportsingests(data):
     for failedingest in failedingests:
         failedingestsjson.append({"id":failedingest,"error":"Ingestion failed for some reason"})
     logging.info("Saving opertations completed, retuning results")
-    return {"failreports":failedreportsjson.append,"failingests":failedingestsjson.append}
+    return {"failreports":failedreportsjson,"failingests":failedingestsjson}
     
     
     
