@@ -112,7 +112,7 @@ def run_savereportsingests(data):
         if datarow["filename"] in failed:
             failjson.append({"filename":datarow["filename"], "id":datarow["id"], "error":"report already exists"})
         else:
-            ingestrecord={"ingests":{"text":datarow["content"],"section":datarow["section"],"created_at":now,"ingested_id":datarow["filename"],"predicted_category":datarow["class"]}}
+            ingestrecord={"ingests":[{"text":datarow["content"],"section":datarow["section"],"created_at":now,"ingested_id":datarow["filename"],"predicted_category":datarow["class"]}]}
             totalcount=saver.create(ingestrecord)
             if totalcount==0:
                failedingest.append(datarow["id"])
