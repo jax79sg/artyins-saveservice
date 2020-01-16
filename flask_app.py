@@ -189,7 +189,7 @@ def savecontent_get():
         request_json = request.get_json(force=True)
         logging.debug("Pass savnig operation to worker function")
         result = run_savereportsingests(request_json)
-        logging.debug("Saving operation completes...dumping results")
+        logging.debug("Saving operation completes...dumping TYPE: %s , results %s", type(result), result)
         response_msg = json.dumps(result)
         response = {
            'results': response_msg
