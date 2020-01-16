@@ -82,12 +82,12 @@ class SQLSaver(SaverInterface):
                       if colCount==0:
                           sqlstatementcolnames=col
                           #sqlstatementcolvalues="\'"+str(row[col])+"\'"
-                          sqlstatementcolvalues="\'%\'"
+                          sqlstatementcolvalues="%s"
                           datalist.append(str(row[col]))
                       else:
                           sqlstatementcolnames=sqlstatementcolnames+','+col
                           #sqlstatementcolvalues=sqlstatementcolvalues+','+"\'"+str(row[col])+"\'"
-                          sqlstatementcolvalues=sqlstatementcolvalues+",\'%\'"
+                          sqlstatementcolvalues=sqlstatementcolvalues+",%s"
                           datalist.append(str(row[col]))
                       colCount=colCount+1
                   sqlstatement="INSERT INTO " + tablename + "(" + sqlstatementcolnames + ") VALUES (" + sqlstatementcolvalues + ")"
