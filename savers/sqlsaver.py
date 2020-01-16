@@ -24,7 +24,7 @@ class SQLSaver(SaverInterface):
 
     def executesql(self, sqlstatement, data):
         try:
-           self.logging.debug("Executing %s", sqlstatement)
+           self.logging.debug("Executing %s with data as follows %s", sqlstatement, data)
            cursor=self.db.cursor()
            cursor.execute(sqlstatement, data)
            self.db.commit()
