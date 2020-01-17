@@ -2,22 +2,13 @@
 version: '2.1'
 services:
 
-  mysqldb:
-    image: mysql
+  jobsvc:
+    image: artyins-saveservice
     restart: always
     volumes:
-      - ./mysql-data:/var/lib/mysql
-      - ./mysql-init-files:/docker-entrypoint-initdb.d
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: password
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: reportdb
-    ports:
-      - "3306:3306"
+    - ./logs:/logs
+    - ./config:/config
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 5s
-      retries: 3
+      test: wget --spider --quiet http://localhost:9891/test
+    ports:
+      - "9891:9891"
