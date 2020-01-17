@@ -2,6 +2,32 @@
 version: '2.1'
 services:
 
+  mysqldb:
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql-init-files:/docker-entrypoint-initdb.d
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: reportdb
+      MYSQL_ROOT_HOST: '%'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "mysqldb"]
+      #test: mysql -h mysqldb --user=user --password=pass -e 'select 1 from reports'
+      timeout: 5s
+      retries: 3
+      interval: 10s
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+
+
   jobsvc:
     image: artyins-saveservice
     restart: always
@@ -12,3 +38,5 @@ services:
       test: wget --spider --quiet http://localhost:9891/test
     ports:
       - "9891:9891"
+    depends_on:
+      - mysqldb

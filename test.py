@@ -4,7 +4,7 @@ import json
 class TestModels(unittest.TestCase):
 
     def test_sqlsaver1createreport(self):
-        sleep(15)
+        sleep(5)
         print("Running SQLSaver create report")
         from savers.sqlsaver import SQLSaver
         saver = SQLSaver()
@@ -13,7 +13,7 @@ class TestModels(unittest.TestCase):
         saver.create(createjsonobj)
 
     def test_sqlsaver2createingest(self):
-        sleep(15)
+        sleep(5)
         print("Running SQLSaver create report")
         from savers.sqlsaver import SQLSaver
         saver = SQLSaver()
@@ -26,7 +26,7 @@ class TestModels(unittest.TestCase):
         saver.create(createjsonobj)
 
     def test_sqlsaver3updateingest(self):
-        sleep(15)
+        sleep(5)
         print("Running SQLSaver update ingest")
         from savers.sqlsaver import SQLSaver
         saver = SQLSaver()
