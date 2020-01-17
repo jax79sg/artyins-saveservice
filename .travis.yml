@@ -11,6 +11,6 @@ install:
   - docker-compose up -d
 
 script:
-  - mkdir /logs
-  - python3 test.py
+#  - mkdir /logs
+#  - python3 test.py
   - python3 testsendreq.py
