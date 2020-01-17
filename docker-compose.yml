@@ -39,4 +39,5 @@ services:
     ports:
       - "9891:9891"
     depends_on:
-      - mysqldb
+      mysqldb:
+         condition: service_healthy
