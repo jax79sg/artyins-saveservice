@@ -1,5 +1,3 @@
-[![Save Service](https://github.com/jax79sg/artyins-saveservice/raw/master/images/SoftwareArchitectureSaveService.jpg)]()
-
 # Save For artyins deployment architecture
 This is a submodule for the artyins deployment architecture. Please refer to [main module](https://github.com/jax79sg/artyins) for full build details.
 
