@@ -21,7 +21,8 @@ import requests
 #r = requests.post(url = URL, json  = DATA)
 #print(r)
 
-
+import time
+time.sleep(20)
 URL = "http://127.0.0.1:9891/test"
 
 # sending get request and saving the response as response object
