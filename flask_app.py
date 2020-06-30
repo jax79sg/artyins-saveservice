@@ -41,6 +41,14 @@ my_class = getattr(module,config.MODEL_CLASS)
 saver = my_class()
 print("{}.{} loaded successfully!".format(config.MODEL_MODULE,config.MODEL_CLASS))
 
+def run_setreportstatus(data):
+    logging.debug("DATA %s  TYPE %s", data, type(data))
+    if isinstance(data, str):
+        data = json.loads(data)
+    filename=data["filename"]
+    status=data["status"]
+    saver.setreportstatus(filename,status)
+
 def run_savereports(data):
     # Expecting {filename:'path'}
     logging.info('Loading data: %s', data)
@@ -112,7 +120,7 @@ def run_savereportsingests(data):
         if datarow["filename"] in failed:
             failedingests.append({"filename":datarow["filename"], "id":datarow["id"], "error":"report already exists"})
         else:
-            ingestrecord={"ingests":[{"text":datarow["content"],"section":datarow["section"],"created_at":now,"ingest_id":datarow["filename"],"predicted_category":datarow["class"]}]}
+            ingestrecord={"ingests":[{"text":datarow["content"],"created_at":now,"ingest_id":datarow["filename"],"predicted_category":datarow["class"]}]}
             totalcount=saver.create(ingestrecord)
             if totalcount==0:
                failedingests.append(datarow["id"])
@@ -190,6 +198,20 @@ def savecontent_get():
         logging.debug("Pass savnig operation to worker function")
         result = run_savereportsingests(request_json)
         logging.debug("Saving operation completes...dumping TYPE: %s , results %s", type(result), result)
+        response_msg = json.dumps(result)
+        response = {
+           'results': response_msg
+        }
+        return jsonify(response), 200
+
+@app.route('/setreportstatus',methods=['POST'])
+def reportstatus_set():
+    logging.info("Received request to update report status")
+    if request.method=='POST':
+        logging.debug("Extracting JSON content")
+        request_json = request.get_json(force=True)
+        logging.debug("Pass savnig operation to worker function")
+        result = run_setreportstatus(request_json)
         response_msg = json.dumps(result)
         response = {
            'results': response_msg

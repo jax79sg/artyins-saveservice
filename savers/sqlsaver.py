@@ -22,6 +22,18 @@ class SQLSaver(SaverInterface):
         cursor.close()
         return rowcount
 
+    def executesqlupdate(self,sqlstatement):
+        try:
+           self.logging.debug("Executing %s ", sqlstatement)
+           cursor=self.db.cursor()
+           cursor.execute(sqlstatement)
+           self.db.commit()
+           rowcount=cursor.rowcount
+           cursor.close()
+
+        except Exception as e:
+           self.logging.error("Problem executing SQL: %s", str(e))
+
     def executesql(self, sqlstatement, data):
         try:
            self.logging.debug("Executing %s with data as follows %s", sqlstatement, data)
@@ -31,7 +43,7 @@ class SQLSaver(SaverInterface):
            rowcount=cursor.rowcount
            cursor.close()
         except Exception as e:
-           self.logging.debug("Problem executing SQL: %s", str(e))
+           self.logging.error("Problem executing SQL: %s", str(e))
            rowcount=0
         return rowcount
     
@@ -134,6 +146,10 @@ class SQLSaver(SaverInterface):
                  sqlstatement="UPDATE " + tablename + " SET " + sqlstatementdata + " WHERE " + sqlstatementcondition
                  sqlstatements.append(sqlstatement)
          self.executesql(sqlstatements)
+
+    def setreportstatus(self,filename,status):
+         sqlstring="UPDATE reports SET currentloc='" + status.upper() + "' WHERE filename='" + filename.lower()+"'"
+         self.executesqlupdate(sqlstring)
 
     def get(self):
          super.get()
